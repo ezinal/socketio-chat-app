@@ -14,6 +14,8 @@ const loginWindow = document.getElementById('login');
 
 const messages = []; // { author, date, content, type }
 
+const socket = io();
+
 createMessageHTML = message => {
     if (message.type === messageTypes.LOGIN) {
         return `
