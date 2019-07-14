@@ -4,18 +4,27 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const path = require('path');
 
-//Serve the puvlic directory
+//Serve public directory
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/index.html'));
+    res.sendFile(path.join(__dirname, +'public/index.html'));
 });
 
-io.on('connection', (socket) => {
-    console.log('A user connected');
+io.on('connection', socket => {
+    console.log('a user connected');
 
-})
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
 
-app.listen(3000, () => {
-    console.log('Listening on port 3000');
+    socket.on('message', message => {
+        console.log('message: ' + message);
+        //Broadcast the message to everyone
+        io.emit('message', message);
+    });
+});
+
+http.listen(3000, () => {
+    console.log('listening on port 3000');
 });
